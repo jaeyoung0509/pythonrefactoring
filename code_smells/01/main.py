@@ -1,6 +1,8 @@
 """
 Employee management system
 Origin : https://github.com/ArjanCodes/2021-code-smells/blob/main/
+
+
 """
 
 from abc import ABC, abstractmethod
