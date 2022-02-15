@@ -3,6 +3,7 @@ Employee management system
 Origin : https://github.com/ArjanCodes/2021-code-smells/blob/main/
 """
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from multiprocessing import managers
 from typing  import List
@@ -20,7 +21,7 @@ class Role(Enum):
     INTERN = auto() 
 
 @dataclass
-class Employee:
+class Employee(ABC):
     name : str
     role :  Role
     vacation_days :int = 25
@@ -46,17 +47,31 @@ class Employee:
                     "you don't have any holidays left  .  Now back to work  :("
                 )
             self.vacation_days -=1 
+    @abstractmethod
+    def pay(self) -> None:
+        """Method to call when paying an employee"""
+
 
 @dataclass
 class HourlyEmployee(Employee):
     """Employee that 's paid based on number of worked hours"""
-    hourly_rate : float = 50
-    amount : int = 10 
+    hourly_rate_won : float = 50
+    hours_worked : int = 10
+    def pay(self) -> None:
+        print(
+            f"Paying employee {self.name} a hourly rate of \
+            ${self.hourly_rate_won} for {self.hours_worked} hours."
+            )
 
 @dataclass
 class SalariedEmployee(Employee):
     """Employee that's paid on a fixed montly salry"""
     monthly_salary : float = 5000
+
+    def pay(self)->None:
+        print(
+            f"Paying employee {self.name} a monthly  salary of a ${self.monthly_salary}."
+        )
 
 
 class Company :
@@ -74,21 +89,6 @@ class Company :
 
 
 
-
-    def pay_employee(self , employee : Employee) -> None:
-        """Pay an employee"""
-        if isinstance(employee  , SalariedEmployee):
-            """isinstance function checks type of two variables """
-            print(
-                f"Paying employee {employee.name} a monthly salary of ${employee.monthly_salary}."
-            )
-        elif isinstance(employee, HourlyEmployee):
-            print(
-                f"Paying employee {employee.name} a hourly rate of \
-                ${employee.hourly_rate} for {employee.amount} hours."
-            )
-            pass
-
 def main()-> None:
     """Mian function"""
     company = Company()
@@ -100,7 +100,8 @@ def main()-> None:
     print(company.find_employees(role=Role.INTERN))
     print(company.find_employees(role=Role.LEAD))
     print(company.find_employees(role=Role.MANAGER))
-    company.pay_employee(company.employees[0])
+
+    company.employees[0].pay()
     company.employees[0].take_a_holiday(False)
 
 
