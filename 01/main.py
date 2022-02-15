@@ -6,14 +6,23 @@ Origin : https://github.com/ArjanCodes/2021-code-smells/blob/main/
 from dataclasses import dataclass
 from multiprocessing import managers
 from typing  import List
+from enum import Enum , auto
 
 FIXED_VACATION_DAYS_PAYOUT=  5
 
+class Role(Enum):
+    """Employee Rules"""
+    PRESIDENT = auto()
+    VICEPRESIDENT= auto()
+    MANAGER = auto()
+    LEAD = auto()
+    WORKER = auto()
+    INTERN = auto() 
 
 @dataclass
 class Employee:
     name : str
-    role :  str
+    role :  Role
     vacation_days :int = 25
 
 
@@ -63,7 +72,7 @@ class Company :
         """Find all manager employee"""
         mangers = []
         for employee in self.employees:
-            if employee.role == "manager" :
+            if employee.role == Role.MANAGER :
                 mangers.append(employee)
         return managers
 
@@ -71,7 +80,7 @@ class Company :
         """find all vice_presents"""
         vice_presents =  []
         for employee in self.employees:
-            if employee.role == "vice_presents" :
+            if employee.role == Role.VICEPRESIDENT :
                 vice_presents.append(employee)
         return managers
 
@@ -79,7 +88,7 @@ class Company :
         """Find all interns."""
         interns = []
         for employee in self.employees:
-            if employee.role == "intern":
+            if employee.role == Role.INTERN:
                 interns.append(employee)
         return interns
 
@@ -102,9 +111,9 @@ def main()-> None:
     """Mian function"""
     company = Company()
 
-    company.add_employee(SalariedEmployee(name="jaeyoung", role="manager"))
-    company.add_employee(HourlyEmployee(name="chulsu", role="president"))
-    company.add_employee(HourlyEmployee(name="babamba", role="intern"))
+    company.add_employee(SalariedEmployee(name="jaeyoung", role=Role.INTERN))
+    company.add_employee(HourlyEmployee(name="chulsu", role=Role.LEAD))
+    company.add_employee(HourlyEmployee(name="babamba", role=Role.PRESIDENT))
 
     print(company.find_vice_presidents())
     print(company.find_managers())
