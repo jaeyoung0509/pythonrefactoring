@@ -27,26 +27,28 @@ class Employee(ABC):
     vacation_days :int = 25
 
 
-    def take_a_holiday(self , payout : bool) -> None:
-        """Let the employee take a single holiday, or pay out 5 holidays."""
-        if payout:
-            # check that there are enough vacation days left for a payout
-            if self.vacation_days < FIXED_VACATION_DAYS_PAYOUT:
-                raise ValueError(
-                    f"you don't have enough holidays left over a payout.\
-                        Remaining holidays  : {self.vacation_days}"
-                )
-            try:
-                self.vacation_days -= FIXED_VACATION_DAYS_PAYOUT
-                print(f"Paying out a holiday . Holiday left :{self.vacation_days}")
-            except Exception :
-                pass
-        else:
-            if self.vacation_days < 1:
+    def take_a_holiday(self) -> None:
+        """Let the employee take a single holiday,."""
+        if self.vacation_days < 1:
                 raise ValueError(
                     "you don't have any holidays left  .  Now back to work  :("
                 )
-            self.vacation_days -=1 
+        self.vacation_days -=1 
+    
+    def payout_a_holiday(self) -> None:
+        """Let the employee get paid for unused holidays"""
+        # check that there are enough vacation days left for a payout
+        if self.vacation_days < FIXED_VACATION_DAYS_PAYOUT:
+            raise ValueError(
+                f"you don't have enough holidays left over a payout.\
+                    Remaining holidays  : {self.vacation_days}"
+            )
+            
+        self.vacation_days -= FIXED_VACATION_DAYS_PAYOUT
+        print(f"Paying out a holiday . Holiday left :{self.vacation_days}")
+     
+
+    
     @abstractmethod
     def pay(self) -> None:
         """Method to call when paying an employee"""
@@ -102,7 +104,7 @@ def main()-> None:
     print(company.find_employees(role=Role.MANAGER))
 
     company.employees[0].pay()
-    company.employees[0].take_a_holiday(False)
+    company.employees[0].take_a_holiday()
 
 
 if __name__ == "__main__":
