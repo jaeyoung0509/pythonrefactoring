@@ -5,11 +5,20 @@ Origin : https://github.com/ArjanCodes/2021-code-smells/blob/main/
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from multiprocessing import managers
 from typing  import List
 from enum import Enum , auto
 
 FIXED_VACATION_DAYS_PAYOUT=  5
+
+class VacationDaysShortageError(Exception):
+    """custom error that is raised when not enough vacation days are available"""
+
+    def __init__(self, requested_days : int , remaining_days :int , message : str) -> None:
+        self.requested_days = requested_days
+        self.remaining_days = remaining_days
+        self.message = message
+        super().__init__(message)
+
 
 class Role(Enum):
     """Employee Rules"""
@@ -30,20 +39,23 @@ class Employee(ABC):
     def take_a_holiday(self) -> None:
         """Let the employee take a single holiday,."""
         if self.vacation_days < 1:
-                raise ValueError(
-                    "you don't have any holidays left  .  Now back to work  :("
-                )
+                raise VacationDaysShortageError(
+                requested_days= 1,
+                remaining_days=self.vacation_days,
+                message="you don't have enough holidyas"
+            )
         self.vacation_days -=1 
     
     def payout_a_holiday(self) -> None:
         """Let the employee get paid for unused holidays"""
         # check that there are enough vacation days left for a payout
         if self.vacation_days < FIXED_VACATION_DAYS_PAYOUT:
-            raise ValueError(
-                f"you don't have enough holidays left over a payout.\
-                    Remaining holidays  : {self.vacation_days}"
+            raise VacationDaysShortageError(
+                requested_days= FIXED_VACATION_DAYS_PAYOUT,
+                remaining_days=self.vacation_days,
+                message="you don't have enough holidyas"
             )
-            
+
         self.vacation_days -= FIXED_VACATION_DAYS_PAYOUT
         print(f"Paying out a holiday . Holiday left :{self.vacation_days}")
      
