@@ -68,29 +68,16 @@ class Company :
         """Add an employee to the list of employees"""
         self.employees.append(employee)
     
-    def find_managers(self) -> List[Employee] :
-        """Find all manager employee"""
-        mangers = []
+    def find_employees(self, role  : Role) -> List[Employee]:
+        """FInd all employees with a particular role"""
+        employees = []
         for employee in self.employees:
             if employee.role == Role.MANAGER :
-                mangers.append(employee)
-        return managers
+                employees.append(employee)
+        return employees
 
-    def find_vice_presidents(self) ->  List[Employee]:
-        """find all vice_presents"""
-        vice_presents =  []
-        for employee in self.employees:
-            if employee.role == Role.VICEPRESIDENT :
-                vice_presents.append(employee)
-        return managers
 
-    def find_interns(self) -> List[Employee]:
-        """Find all interns."""
-        interns = []
-        for employee in self.employees:
-            if employee.role == Role.INTERN:
-                interns.append(employee)
-        return interns
+
 
 
     def pay_employee(self , employee : Employee) -> None:
@@ -115,9 +102,9 @@ def main()-> None:
     company.add_employee(HourlyEmployee(name="chulsu", role=Role.LEAD))
     company.add_employee(HourlyEmployee(name="babamba", role=Role.PRESIDENT))
 
-    print(company.find_vice_presidents())
-    print(company.find_managers())
-    print(company.find_interns())
+    print(company.find_employees(role=Role.INTERN))
+    print(company.find_employees(role=Role.LEAD))
+    print(company.find_employees(role=Role.MANAGER))
     company.pay_employee(company.employees[0])
     company.employees[0].take_a_holiday(False)
 
