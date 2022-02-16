@@ -1,5 +1,6 @@
 import random
 import string
+from typing import Protocol
 
 from pos.order import Order, OrderStatus
 from pos.payment import StripePaymentProcessor
@@ -9,14 +10,20 @@ def generate_id(length: int = 6) -> str:
     """Helper function for generating an id."""
     return "".join(random.choices(string.ascii_uppercase, k=length))
 
+class PaymentProcessor(Protocol):
+    def process_payment(self, reference : str , price : int) -> None:
+        '''What is Protocol
+        공부하기
+        
+         '''
+
 
 class PoSSystem:
     def __init__(self) -> None:
         self.payment_processor  = StripePaymentProcessor(self)
         self.orders : dict[str ,Order] = {}
 
-    def setup_payment_processor(self, url: str)->None:
-        self.payment_processor.connect_to_service(url)
+
 
     def register_order(self, order : Order) -> None:
         order.id = generate_id()
@@ -25,13 +32,9 @@ class PoSSystem:
     def find_order(self ,order_id : int) -> Order:
         return self.orders[order_id]
 
-    def compute_order_total_price(self, order: Order) -> int:
-        total = 0
-        for i in range(len(order.prices)):
-            total += order.quantities[i] * order.prices[i]
-        return total
+    
 
     def process_order(self, order: Order) -> None:
-        self.payment_processor.process_payment(order.id)
+        self.payment_processor.process_payment(order.id , order.total_price)
         order.set_status(OrderStatus.PAID)
         print("Shipping order to customer.")

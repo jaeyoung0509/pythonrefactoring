@@ -2,11 +2,11 @@ from pos.order import Order
 from pos.system import POSSystem
 from pos.line_item import LineItem
 from pos.customer import Customer
+from pos.payment import StripePaymentProcessor
 def main() -> None:
     # create the POS system and setup the payment processor
-    system = POSSystem()
-    system.setup_payment_processor("https://api.stripe.com/v2")
-
+    payment_processor = StripePaymentProcessor.create("http://api.stripe.com/v2")
+    system = POSSystem(payment_processor)
     # create   a customer 
     customer = Customer("jaeyoung" , "seoul 123 123 " , "1234" ,"seoul seoul" , "jaeyoung@github.com")
     # create the order

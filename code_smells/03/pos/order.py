@@ -23,5 +23,16 @@ class Order:
 
     def add_line_item(self, item : LineItem  ) -> None:
         self.items.append(item)
+
     def set_stauts(self, status:OrderStatus):
         self._status = status
+
+    @property
+    def total_price(self) -> int:
+        '''
+        total : int = 0
+        for item in self.items:
+            total += item.total_price
+        return total
+        '''
+        return sum (line_item.total_price for line_item in self.items)     
