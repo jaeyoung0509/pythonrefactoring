@@ -1,6 +1,6 @@
 from dataclasses import dataclass , field
 from enum import Enum ,auto
-
+from line_item import LineItem
 
 class OrderStatus(Enum):
     """Order status"""
@@ -21,16 +21,11 @@ class Order:
     customer_postal_code : str = ""
     customer_city : str = ""
     customer_email : str  = ""
-    items: list[str] = field(default_factory=list)
-    quantities: list[int] = field(default_factory=list)
-    prices: list[int] = field(default_factory=list)
+    items : list[LineItem] = field(default_factory=list)
     _status: OrderStatus = OrderStatus.OPEN
     id: str = ""
 
-    def create_item(self, name: str ,quantity : int , price : int ) -> None:
-        self.items.append(name)
-        self.quantities.append(quantity)
-        self.prices.append(price)
-
+    def create_item(self, item : LineItem  ) -> None:
+        self.items.append(item)
     def set_stauts(self, status:OrderStatus):
         self._status = status
