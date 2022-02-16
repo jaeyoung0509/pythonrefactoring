@@ -8,8 +8,8 @@ Origin :https://github.com/ArjanCodes/2021-more-code-smells/blob/main/before.py
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum ,auto
-from random import *
-from string import *
+import random
+import string
 from typing import Optional, Tuple 
 
 
@@ -53,7 +53,7 @@ class VehicleModelInfo:
         tax_percentage = taxes[self.fuel_type]
         return tax_percentage * self.catalogue_price
 
-    def get_info_str(self) -> str:
+    def __str__(self) -> str:
         """String representation of this instance"""
         return f"brand : {self.brand}  - type : {self.model} - tax: {self.tax}"
 
@@ -65,10 +65,9 @@ class Vehicle:
     license_plate : str
     info : VehicleModelInfo
 
-    def to_string(self) -> str:
+    def __str__(self) -> str:
         """String representaition of the instance"""
-        info_str = self.info.get_info_str()
-        return f"Id {self.vehichle_id} License plate : {self.license_plate} . Info : {info_str}"
+        return f"Id {self.vehichle_id} License plate : {self.license_plate} . Info : {self.info}"
 
 
 class VehicleRegistry:
@@ -84,14 +83,28 @@ class VehicleRegistry:
         """Helper method for adding a VehicleModelInfo object to a list."""
         self.vehicle_models[(model_info.brand , model_info.model)] = model_info
 
-    def generate_vehicle_id(self, length: int) -> str:
-        """Helper method for generating a random vehicle id."""
-        """choices function makes random num"""
-        return "".join(choices(ascii_uppercase, k=length))
+    """_summary_
+    staticmethod vs classmethod
 
-    def generate_vehicle_license(self, _id: str) -> str:
+    classmethod can access to the class instance so it can change  class variables class attributes 
+    *  cls(class)의 인자를 넣어줘야 됨 ->클래스 메소드는 클래스 자체를 인자에 넣어줘야 됨
+
+    static method can do that it simply belongs to class 
+    *   클래스에서 직접 접근하며 객체별로 달라지는것이 아니라 함께 공유하는 것
+    *   정적 함수 이기때문에 self를 통한 접근은 불가능
+    """
+
+    @staticmethod
+    def generate_vehicle_id( length: int) -> str:
+        """Helper method for generating a random vehicle id."""
+        """choices function makes randoms"""
+        return "".join(random.choices(string.ascii_uppercase, k=length))
+    @staticmethod
+    def generate_vehicle_license(_id: str) -> str:
         """Helper method for generating a vehicle license number."""
-        return f"{_id[:2]}-{''.join(choices(digits, k=2))}-{''.join(choices(ascii_uppercase, k=2))}"
+        digit_part = ''.join(random.choices(string.digits, k=2))
+        letter_part =''.join(random.choices(string.ascii_uppercase, k=2))
+        return f"{_id[:2]}-{digit_part}-{letter_part}"
 
     def register_vehicle(self, brand: str, model: str) -> Vehicle:
         """Create a new vehicle and generate an id and a license plate."""
@@ -113,16 +126,16 @@ class VehicleRegistry:
 
     def online_status(self) -> RegistryStatus:
         """Report whether the registry system is online."""
-        return (
-            RegistryStatus.OFFLINE
-            if not self.online
-            else RegistryStatus.CONNECTION_ERROR
-            if len(self.vehicle_models) == 0
-            else RegistryStatus.ONLINE
-        )
+        if not self.online:
+            return RegistryStatus.OFFLINE
+        else:
+            return (
+                RegistryStatus.CONNECTION_ERROR
+                if len(self.vehicle_models) == 0
+                else RegistryStatus.ONLINE
+            )
 
-if __name__ == "__main__":
-
+def main():
     # create a registry instance
     registry = VehicleRegistry()
 
@@ -140,3 +153,6 @@ if __name__ == "__main__":
 
     # print out the vehicle information
     print(vehicle.to_string())
+
+if __name__ == "__main__":
+    main()
