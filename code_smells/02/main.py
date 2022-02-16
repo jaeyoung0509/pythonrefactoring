@@ -6,6 +6,7 @@ Origin :https://github.com/ArjanCodes/2021-more-code-smells/blob/main/before.py
 
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum ,auto
 from random import *
 from string import *
@@ -42,8 +43,8 @@ class VehicleModelInfo:
     brand : str
     model : str
     catalogue_price  : int 
-    fuel_type : FuelType
-    production_year : int
+    fuel_type : FuelType = FuelType.ELECTRONIC
+    production_year : int = datetime
 
     @property
     def tax(self) -> float:
@@ -78,19 +79,14 @@ class VehicleRegistry:
 
     def add_vehicle_model_info(
         self,
-        brand: str,
-        model: str,
-        catalogue_price: int,
-        fuel_type: FuelType,
-        year: int,
+        model_info : VehicleModelInfo
     ) -> None:
         """Helper method for adding a VehicleModelInfo object to a list."""
-        self.vehicle_models.append(
-            VehicleModelInfo(brand, model, catalogue_price, fuel_type, year)
-        )
+        self.vehicle_models.append(model_info)
 
     def generate_vehicle_id(self, length: int) -> str:
         """Helper method for generating a random vehicle id."""
+        """choices function makes random num"""
         return "".join(choices(ascii_uppercase, k=length))
 
     def generate_vehicle_license(self, _id: str) -> str:
@@ -123,10 +119,10 @@ if __name__ == "__main__":
     registry = VehicleRegistry()
 
     # add a couple of different vehicle models
-    registry.add_vehicle_model_info("Tesla", "Model 3", 50000, FuelType.ELECTRIC, 2021)
-    registry.add_vehicle_model_info("Volkswagen", "ID3", 35000, FuelType.ELECTRIC, 2021)
-    registry.add_vehicle_model_info("BMW", "520e", 60000, FuelType.PETROL, 2021)
-    registry.add_vehicle_model_info("Tesla", "Model Y", 55000, FuelType.ELECTRIC, 2021)
+    registry.add_vehicle_model_info(VehicleModelInfo("Tesla", "Model 3", 50000,  2021))
+    registry.add_vehicle_model_info(VehicleModelInfo("Volkswagen", "ID3", 35000,  2021))
+    registry.add_vehicle_model_info(VehicleModelInfo("BMW", "520e", 60000, FuelType.PETROL, 2021))
+    registry.add_vehicle_model_info(VehicleModelInfo("Tesla", "Model Y", 55000, 2021))
 
     # verify that the registry is online
     print(f"Registry status: {registry.online_status()}")
