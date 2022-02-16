@@ -1,6 +1,7 @@
 from dataclasses import dataclass , field
 from enum import Enum ,auto
 from line_item import LineItem
+from customer import Customer
 
 class OrderStatus(Enum):
     """Order status"""
@@ -15,17 +16,12 @@ class Order:
     """
     list와 같은 컨테이너 타입의 빈 값을 기본값으로 받고 싶을땐 , field함수를 할당받아 사용하기
     """
-    customer_id : int = 0
-    customer_name : str = ""
-    customer_address : str = ""
-    customer_postal_code : str = ""
-    customer_city : str = ""
-    customer_email : str  = ""
+    customer : Customer
     items : list[LineItem] = field(default_factory=list)
     _status: OrderStatus = OrderStatus.OPEN
     id: str = ""
 
-    def create_item(self, item : LineItem  ) -> None:
+    def add_line_item(self, item : LineItem  ) -> None:
         self.items.append(item)
     def set_stauts(self, status:OrderStatus):
         self._status = status
