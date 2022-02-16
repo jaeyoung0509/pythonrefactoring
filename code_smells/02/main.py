@@ -88,6 +88,7 @@ class VehicleRegistry:
 
     classmethod can access to the class instance so it can change  class variables class attributes 
     *  cls(class)의 인자를 넣어줘야 됨 ->클래스 메소드는 클래스 자체를 인자에 넣어줘야 됨
+    
 
     static method can do that it simply belongs to class 
     *   클래스에서 직접 접근하며 객체별로 달라지는것이 아니라 함께 공유하는 것
