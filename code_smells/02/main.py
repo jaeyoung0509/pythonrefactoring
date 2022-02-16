@@ -10,7 +10,7 @@ from datetime import datetime
 from enum import Enum ,auto
 from random import *
 from string import *
-from typing import Optional
+from typing import Optional, Tuple 
 
 
 
@@ -73,17 +73,16 @@ class Vehicle:
 
 class VehicleRegistry:
     """Class representing a basic vehicle registration system"""
-
+    """
+    Tuple can not modify it's value  so it is faster  and has less memory than list
+    """
     def __init__(self) -> None:
-        self.vehicle_models : list[VehicleModelInfo] = []
+        self.vehicle_models : dict[Tuple[str,  str] ,VehicleModelInfo] = {}
         self.online = True
 
-    def add_vehicle_model_info(
-        self,
-        model_info : VehicleModelInfo
-    ) -> None:
+    def add_vehicle_model_info(self,model_info : VehicleModelInfo) -> None:
         """Helper method for adding a VehicleModelInfo object to a list."""
-        self.vehicle_models.append(model_info)
+        self.vehicle_models[(model_info.brand , model_info.model)] = model_info
 
     def generate_vehicle_id(self, length: int) -> str:
         """Helper method for generating a random vehicle id."""
@@ -109,12 +108,8 @@ class VehicleRegistry:
         
 
     def find_model_info(self ,brand :str , model :str) -> Optional[VehicleModelInfo]:
-        """"""
-        for vehicle_info in self.vehicle_models:
-            if vehicle_info.brand != brand or vehicle_info.model != model:
-                    continue
-                return vehicle_info
-        return None
+        """Find Vehicle model info for a brand and model If no ifno can be found , None is returned """
+        return self.vehicle_models.get((brand , model))
 
     def online_status(self) -> RegistryStatus:
         """Report whether the registry system is online."""
