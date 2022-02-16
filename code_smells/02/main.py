@@ -10,6 +10,7 @@ from datetime import datetime
 from enum import Enum ,auto
 from random import *
 from string import *
+from typing import Optional
 
 
 
@@ -95,13 +96,25 @@ class VehicleRegistry:
 
     def register_vehicle(self, brand: str, model: str) -> Vehicle:
         """Create a new vehicle and generate an id and a license plate."""
+        """ 
+        ':=' 바다 코끼리 연산자?
+        표현식에 이름을 부여하고 재사용 할 수 있도록 하는것 
+        바다코끼리 연산자를 사용하면 할당과 테스트를 한단계로 줄일 수 있음.
+        """
+        if not   (vehicle_model := self.find_model_info(brand, model)):
+            raise VehicleInfoMissingError(brand, model)
+        vehicle_id = self.generate_vehicle_id(12)
+        license_plate = self.generate_vehicle_license(vehicle_id)
+        return Vehicle(vehicle_id, license_plate, vehicle_model)
+        
+
+    def find_model_info(self ,brand :str , model :str) -> Optional[VehicleModelInfo]:
+        """"""
         for vehicle_info in self.vehicle_models:
-            if vehicle_info.brand == brand:
-                if vehicle_info.model == model:
-                    vehicle_id = self.generate_vehicle_id(12)
-                    license_plate = self.generate_vehicle_license(vehicle_id)
-                    return Vehicle(vehicle_id, license_plate, vehicle_info)
-        raise VehicleInfoMissingError(brand, model)
+            if vehicle_info.brand != brand or vehicle_info.model != model:
+                    continue
+                return vehicle_info
+        return None
 
     def online_status(self) -> RegistryStatus:
         """Report whether the registry system is online."""
