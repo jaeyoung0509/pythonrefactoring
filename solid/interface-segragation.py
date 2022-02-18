@@ -20,15 +20,17 @@ class Order:
 
 class PaymentProcessor(ABC):
     @abstractmethod
-    def auth_sms(self ,code):
-        pass
-    
-    @abstractmethod
     def pay(self , order):
         pass
 
 
-class DebitPaymentProcessor(PaymentProcessor):
+class PaymentProcessor_SMS(PaymentProcessor):
+    @abstractmethod
+    def auth_sms(self ,code):
+        pass
+
+
+class DebitPaymentProcessor(PaymentProcessor_SMS):
     def __init__(self , security_code) -> None:
         self.verified = False
         self.security_code = security_code
@@ -50,7 +52,7 @@ class CreditPaymentProcessor(PaymentProcessor):
         print(f"Verifying security code: {self.security_code}")
         order.status = "paid"
 
-class PaypalPaymentProcessor(PaymentProcessor):
+class PaypalPaymentProcessor(PaymentProcessor_SMS):
     def __init__(self , email_address) -> None:
         self.verified = False
         self.email_address = email_address
