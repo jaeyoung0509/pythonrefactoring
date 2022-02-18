@@ -19,10 +19,16 @@ class Order:
             total += self.quantities[i] * self.prices[i]
         return total
 
-class SMSAuthorizer:
 
-    def __init__(self):
-        self.authorized = False
+class Authorizer(ABC):
+    @abstractmethod
+    def is_authorized(self) -> bool:
+        pass
+
+
+class SMSAuthorizer(Authorizer):
+
+    authorized = False
 
     def verify_code(self, code):
         print(f"Verifying SMS code {code}")
@@ -30,6 +36,16 @@ class SMSAuthorizer:
 
     def is_authorized(self) -> bool:
         return self.authorized
+
+class NotARobot(Authorizer):
+    authorized= False
+
+    def not_a_robot(self):
+        self.authorized = True
+
+    def is_authorized(self) -> bool:
+        return self.authorized
+
 
 
 class PaymentProcessor(ABC):
@@ -82,7 +98,8 @@ order.add_item("SSD", 1, 150)
 order.add_item("USB cable", 2, 5)
 
 print(order.total_price())
-authorizer = SMSAuthorizer()
+authorizer = NotARobot()
 # authorizer.verify_code(465839)
+authorizer.not_a_robot()
 processor = PaypalPaymentProcessor("hi@arjancodes.com", authorizer)
 processor.pay(order)
