@@ -6,7 +6,6 @@ reference :https://andrewbrookins.com/technology/building-implicit-interfaces-in
 '''
 
 from typing import Protocol
-from unicodedata import name
 
 class Flyer(Protocol):
         def fly(self) -> None:

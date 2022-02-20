@@ -1,24 +1,19 @@
-
-from abc import ABC , abstractmethod
-
-
-class Simian(ABC):
-    @abstractmethod
-    def walking(self) -> None:
-        pass
+from typing import Protocol
 
 
-class Human(Simian):
-    @abstractmethod
-    def speaking(self) -> None :
-        pass
+class Human(Protocol):
+    def speaking(self) -> None:
+        ...
     
-class Monkey(Simian):
     def walking(self) -> None:
-        print(
-            f"{type(self)} is walking" 
-            )       
-class Jaeyong(Human):
+        ...
+
+class Simian(Protocol):
+    def walking(self) -> None:
+        ...
+
+
+class Jaeyong():
     def speaking(self) -> None:
         print(
             f"{type(self)} is speaking" 
@@ -28,8 +23,15 @@ class Jaeyong(Human):
             f"{type(self)} is walking" 
             )
 
+class Monkey():
+    def walking(self) -> None:
+        print(
+            f"{type(self)} is walking" 
+        )
+    
 
 class BeSimian:
+    """사람도 원숭이도 유인원"""
     def be(self , obj : Simian) -> None:
         return obj.walking()
 
@@ -46,7 +48,6 @@ def main() -> None:
     human = BeHuman()
     human.be(Jaeyong())
     human.be(Monkey())
-    
 
-if __name__ == '__main__':
-    main()
+if __name__ == '__main__' :
+    main() 
