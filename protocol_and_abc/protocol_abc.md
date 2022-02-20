@@ -24,5 +24,15 @@ class Parent(ABC)
 
 
 ## ABC vs Protocol
-* ABC는 인터페이스를 상속을 이용해서 해당 메소드를 구현 
-* Protocl은
+* 에러나는 위치가 다름(필요한 인터페이스를 다 구현하지 않았을 경우..?)
+> pyhon
+HueLight라는 클래스가 있고 register_device를 구현하지 않은 경우
+  *  ABC는 객체(클래스) 인스턴스 시 
+  ```python
+    hue_light = HueLight() <- This command line error occurs
+  ```
+  *  Protocol은 메소드 호출 시
+ ```python
+    hue_light = HueLight() 
+    hue_light_id = service.register_device(hue_light)<- This command line error occurs
+ ```
