@@ -1,9 +1,9 @@
 from iot.devices import HueLightDevice, SmartSpeakerDevice, SmartToiletDevice
 from iot.message import Message, MessageType
 from iot.service import IOTService
+import asyncio
 
-
-def main() -> None:
+async def main() -> None:
     # create a IOT service
     service = IOTService()
 
@@ -11,9 +11,9 @@ def main() -> None:
     hue_light = HueLightDevice()
     speaker = SmartSpeakerDevice()
     toilet = SmartToiletDevice()
-    hue_light_id = service.register_device(hue_light)
-    speaker_id = service.register_device(speaker)
-    toilet_id = service.register_device(toilet)
+    hue_light_id = await service.register_device(hue_light)
+    speaker_id = await service.register_device(speaker)
+    toilet_id = await service.register_device(toilet)
 
     # create a few programs
     wake_up_program = [
@@ -30,9 +30,9 @@ def main() -> None:
     ]
 
     # run the programs
-    service.run_program(wake_up_program)
-    service.run_program(sleep_program)
+    await service.run_program(wake_up_program)
+    await service.run_program(sleep_program)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
