@@ -1,10 +1,11 @@
 import random
 import string 
-from typing import Protocol
+from typing import Protocol , List
 from iot.message import Message , MessageType
 
 def generate_id(length : int = 8):
-    return "".join(random.choices(string.ascii_uppercase) , k = length)
+    
+    return "".join(random.choices(string.ascii_uppercase , k = length))
 
 class Device(Protocol):
     def connect(self) -> None:
@@ -28,7 +29,7 @@ class IOTService:
     def get_device(self ,device_id : str) -> Device:
         return self.devices.get(device_id)
     
-    def run_program(self, program: list[Message]) -> None:
+    def run_program(self, program: List[Message]) -> None:
         print("=====RUNNING PROGRAM======")
         for msg in program:
             self.send_msg(msg)
